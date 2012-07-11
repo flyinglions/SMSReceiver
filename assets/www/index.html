@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>SMS</title>
+<script type="text/javascript" charset="utf-8" src="cordova-1.7.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="SmsReceiverPlugin.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+document.addEventListener("deviceready", onDeviceReady, true);
+window.onbeforeunload  =  function(e)
+{
+	window.plugins.SmsReceiverPlugin.unregister(null, null); 
+}
+
+function onDeviceReady()
+{
+	window.plugins.SmsReceiverPlugin.register("smscallback", function()
+			{
+			    console.log("Registration ok");
+			}, function (e)
+			{
+			    console.log("Registration NOT ok: " + e);
+			});	
+}
+
+function smscallback(data)
+{
+    console.log("inside callback, sms received: " + data);
+	var txt = "";
+	txt += "<b>Number:</b> " +  data.origin + "<br />";
+	txt += "<b>Message:</b> " + data.body + "<br />";
+	txt += "<b>Date/Time of sms:</b> " + data.time + "<br />";
+	document.getElementById("sms").innerHTML = txt;
+	
+	var txt = data.decoded;
+
+	document.getElementById("decoded").innerHTML = txt;
+	
+}
+</script>
+</head>
+<body>
+    <h1>SMS Listener</h1><hr>
+	<div id="sms"></div><hr>
+	<div id="decoded"></div><hr>
+	
+</body>
+</html>
